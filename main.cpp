@@ -1,41 +1,23 @@
-// #include <iostream>
-// #include <fstream>
-// #include <sstream>
-// #include "lexer.h"
-
-// int main()
-// {
-//     std::ifstream file("main.txt");
-
-//     if (!file.is_open())
-//     {
-//         std::cerr << "Failed to open main.txt\n";
-//         return 1;
-//     }
-
-//     // Read the entire file into a string
-//     std::stringstream buffer;
-//     buffer << file.rdbuf();
-//     std::string source = buffer.str();
-
-//     Lexer lexer;
-//     std::vector<Token> tokens = lexer.scanTokens(source);
-
-//     for (const Token &t : tokens)
-//     {
-//         std::cout << "type=" << static_cast<int>(t.type)
-//                   << " value='" << t.value << "'\n";
-//     }
-
-//     return 0;
-// }
-
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "lexer.h"
 #include "parser.h"
+#include "interpreter.h"
 
 int main() {
-    std::string source = "12+7";
+
+    std::ifstream file("main.txt");
+
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open main.txt\n";
+        return 1;
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string source = buffer.str();
     
     Lexer lexer;
     auto tokens = lexer.scanTokens(source);
@@ -43,7 +25,10 @@ int main() {
     Parser parser(tokens);
     BinaryExpr expr = parser.parse();
     
-    // TODO: evaluate the expr and print result
+    Interpreter interpreter;
+    int result = interpreter.evaluate(expr);
+    
+    std::cout << result << '\n';
     
     return 0;
 }

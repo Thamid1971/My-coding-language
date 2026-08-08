@@ -2,9 +2,14 @@
 #include <string>
 
 enum class TokenType {
-    NUMBER,
+    NUMBER, IDENTIFIER,
+    LET,
+    PLUS, MINUS, STAR, SLASH,
+    LPAREN, RPAREN,
+    EQUAL, SEMICOLON,
+    END_OF_FILE,
     OPERATOR,
-    END_OF_FILE
+    ERROR
 };
 
 struct Token {

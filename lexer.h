@@ -65,6 +65,43 @@ public:
                     std::string(1, c)
                 });
             }
+            else if (c == '=')
+            {
+                tokens.push_back({
+                    TokenType::EQUAL,
+                    "="
+                });
+            }
+            else if (c == ';')
+            {
+                tokens.push_back({
+                    TokenType::SEMICOLON,
+                    ";"
+                });
+            }
+            else if (std::isalpha(c) || c == '_')
+            {
+                std::string text = "";
+                while (i < SourceCode.size() && (std::isalnum(SourceCode[i]) || SourceCode[i] == '_'))
+                {
+                    text += SourceCode[i];
+                    i++;
+                }
+                i--;  // back up one
+
+                if (text == "let")
+                {
+                    tokens.push_back({TokenType::LET, text});
+                }
+                else
+                {
+                    tokens.push_back({TokenType::IDENTIFIER, text});
+                }
+            }
+            else if (c == ' ' || c == '\n' || c == '\t')
+            {
+                // skip whitespace
+            }
         }
 
         tokens.push_back({

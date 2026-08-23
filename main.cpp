@@ -40,7 +40,7 @@
 #include "interpreter.h"
 
 int main() {
-    std::ifstream file("main.txt");
+    std::ifstream file("main.cpm");
     if (!file.is_open()) {
         std::cerr << "Failed to open main.txt\n";
         return 1;

@@ -68,7 +68,6 @@ Expr* Parser::parseExpression(int minPrecedence) {
 }
 
 Expr* Parser::parse() {
-    // Handle multiple let statements
     while (check(TokenType::LET)) {
         advance();  // consume "let"
         

@@ -8,7 +8,8 @@ class Parser {
 public:
     explicit Parser(std::vector<Token> tokens);
     Expr* parse();
-
+    
+    std::vector<std::pair<std::string, Expr*>> letStatements;
 private:
     std::vector<Token> tokens;
     Interpreter* interpreter;

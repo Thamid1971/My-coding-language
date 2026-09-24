@@ -75,13 +75,14 @@ Expr* Parser::parse() {
         if (!check(TokenType::IDENTIFIER)) {
             throw std::runtime_error("Expected variable name after let");
         }
-        advance();  // just skip the variable name for now
+        std::string varName = advance().value;  // EXTRACT the name
         
         if (!match(TokenType::EQUAL)) {
             throw std::runtime_error("Expected = after variable name");
         }
 
-        parseExpression(0);  // parse but don't use the result yet
+        Expr* valueExpr = parseExpression(0);  // CAPTURE the expression
+        letStatements.push_back({varName, valueExpr});  // STORE it
 
         if (!match(TokenType::SEMICOLON)) {
             throw std::runtime_error("Expected ; after expression");

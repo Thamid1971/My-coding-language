@@ -6,10 +6,12 @@
 #include "compiler.h"
 #include "vm.h"
 
-int main() {
+int main()
+{
     std::ifstream file("main.cp");
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Failed to open main.cp\n";
         return 1;
     }
@@ -22,13 +24,24 @@ int main() {
     auto tokens = lexer.scanTokens(source);
 
     Parser parser(tokens);
-    Expr* expr = parser.parse();
+    Expr *finalExpr = parser.parse();
 
     Compiler compiler;
-    Bytecode bytecode = compiler.compile(expr);
-
     VM vm;
-    int result = vm.execute(bytecode);
+
+    // Execute all let statements first (no RETURN)
+    for (const auto &[varName, expr] : parser.letStatements)
+    {
+        Bytecode code = compiler.compile(expr);
+        code.pop_back(); // remove the RETURN
+        code.push_back({Opcode::STORE_VAR, varName});
+        code.push_back({Opcode::RETURN, ""}); // add RETURN back
+        vm.execute(code);
+    }
+
+    // Then compile and execute the final expression (with RETURN)
+    Bytecode finalCode = compiler.compile(finalExpr);
+    int result = vm.execute(finalCode);
 
     std::cout << result << '\n';
 

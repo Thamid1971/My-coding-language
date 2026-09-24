@@ -1,8 +1,8 @@
 #include "parser.h"
 #include <stdexcept>
 
-Parser::Parser(std::vector<Token> tokens, Interpreter* interp)
-    : tokens(tokens), interpreter(interp) {}
+Parser::Parser(std::vector<Token> tokens) 
+    : tokens(tokens) {}
 
 Token Parser::peek() const {
     return tokens[current];
@@ -68,21 +68,20 @@ Expr* Parser::parseExpression(int minPrecedence) {
 }
 
 Expr* Parser::parse() {
+    // Handle multiple let statements
     while (check(TokenType::LET)) {
         advance();  // consume "let"
         
         if (!check(TokenType::IDENTIFIER)) {
             throw std::runtime_error("Expected variable name after let");
         }
-        std::string varName = advance().value;
+        advance();  // just skip the variable name for now
         
         if (!match(TokenType::EQUAL)) {
             throw std::runtime_error("Expected = after variable name");
         }
 
-        Expr* value = parseExpression(0);
-        int result = interpreter->evaluate(value);
-        interpreter->setVariable(varName, result);
+        parseExpression(0);  // parse but don't use the result yet
 
         if (!match(TokenType::SEMICOLON)) {
             throw std::runtime_error("Expected ; after expression");

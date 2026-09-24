@@ -6,7 +6,7 @@
 
 class Parser {
 public:
-    explicit Parser(std::vector<Token> tokens, Interpreter* interp);
+    explicit Parser(std::vector<Token> tokens);
     Expr* parse();
 
 private:
